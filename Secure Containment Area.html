@@ -4,109 +4,254 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Secure Containment Area</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-        body { background-color: #000; color: #00ff00; font-family: 'Share Tech Mono', monospace; margin: 0; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+
+        body {
+            background-color: #000;
+            color: #00ff00;
+            font-family: 'Share Tech Mono', monospace;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- HALAMAN 1: LOGIN IDENTITAS --- */
+        #loginPhase {
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 2px solid #00ff00;
+            padding: 30px;
+            box-shadow: 0 0 20px #00ff00;
+            background: rgba(0, 20, 0, 0.9);
+            z-index: 10;
+        }
+
+        h1 { margin: 0 0 20px 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* CONTAINER */
-        .phase-container { width: 90%; max-width: 400px; text-align: center; border: 2px solid #00ff00; padding: 25px; box-shadow: 0 0 20px #00ff00; background: rgba(0, 20, 0, 0.95); display: none; }
-        
-        h1 { margin: 0 0 15px 0; font-size: 22px; text-transform: uppercase; letter-spacing: 2px; border-bottom: 1px solid #00ff00; padding-bottom: 10px; }
-        .input-box { width: 90%; margin-bottom: 15px; background: transparent; border: 1px solid #005500; color: #00ff00; padding: 12px; font-family: 'Share Tech Mono', monospace; font-size: 16px; text-transform: uppercase; outline: none; text-align: center; }
+        .input-box {
+            width: 100%;
+            margin-bottom: 20px;
+            background: transparent;
+            border: 1px solid #005500;
+            color: #00ff00;
+            padding: 15px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 16px;
+            text-transform: uppercase;
+            outline: none;
+            text-align: center;
+        }
         .input-box:focus { border-color: #00ff00; background: rgba(0, 255, 0, 0.1); }
-        .date-group { display: flex; gap: 5px; margin-bottom: 15px; justify-content: center; }
-        .date-input { width: 25%; text-align: center; }
         
-        button { width: 100%; padding: 12px; background: #00ff00; color: #000; border: none; font-weight: bold; font-size: 16px; cursor: pointer; font-family: 'Share Tech Mono', monospace; transition: 0.3s; margin-top: 10px; }
-        button:active { transform: scale(0.98); }
+        .date-group { display: flex; gap: 10px; margin-bottom: 20px; }
+        .date-input { width: 33%; text-align: center; }
+
+        button {
+            width: 100%;
+            padding: 15px;
+            background: #00ff00;
+            color: #000;
+            border: none;
+            font-weight: bold;
+            font-size: 18px;
+            cursor: pointer;
+            font-family: 'Share Tech Mono', monospace;
+            transition: 0.3s;
+        }
+        button:hover { background: #ccffcc; box-shadow: 0 0 15px #00ff00; }
+
+        /* --- HALAMAN 2: ANAGRAM PUZZLE --- */
+        #puzzlePhase {
+            display: none;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        .glitch-text {
+            font-size: 40px;
+            letter-spacing: 10px;
+            font-weight: bold;
+            animation: glitch 1s infinite;
+            margin: 20px 0;
+            color: #ff3333; /* Merah Error */
+        }
+
+        .puzzle-instruction {
+            color: #ff3333;
+            font-size: 14px;
+            margin-bottom: 10px;
+            border: 1px solid #ff3333;
+            padding: 10px;
+        }
+
+        /* --- HALAMAN 3: THE FORMULA (ENDING) --- */
+        #rewardPhase {
+            display: none;
+            width: 90%;
+            max-width: 500px;
+            background: #fff;
+            color: #000;
+            padding: 30px;
+            transform: rotate(-1deg);
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+            border: 1px solid #ccc;
+        }
+
+        .formula-img {
+            width: 100%;
+            border: 2px solid #000;
+            margin: 15px 0;
+        }
 
         .error-msg { color: #ff3333; font-size: 12px; margin-top: 10px; display: none; }
-        .glitch-text { font-size: 36px; letter-spacing: 5px; font-weight: bold; animation: glitch 1s infinite; margin: 20px 0; color: #ff3333; }
-        
-        /* REWARD PHASE */
-        #rewardPhase { background: #fff; color: #000; border: none; transform: rotate(-1deg); box-shadow: 0 0 50px rgba(255,255,255,0.5); }
-        
-        @keyframes glitch { 0% { transform: translate(0) } 20% { transform: translate(-2px, 2px) } 40% { transform: translate(-2px, -2px) } 60% { transform: translate(2px, 2px) } 80% { transform: translate(2px, -2px) } 100% { transform: translate(0) } }
+
+        @keyframes glitch {
+            0% { transform: translate(0) }
+            20% { transform: translate(-2px, 2px) }
+            40% { transform: translate(-2px, -2px) }
+            60% { transform: translate(2px, 2px) }
+            80% { transform: translate(2px, -2px) }
+            100% { transform: translate(0) }
+        }
+
     </style>
 </head>
 <body>
 
-    <div id="loginPhase" class="phase-container" style="display:block;">
+    <div id="loginPhase">
         <h1>ACCESS CONTROL</h1>
         <p style="font-size:12px; margin-bottom:20px;">BIOMETRIC VERIFICATION REQUIRED</p>
+        
         <input type="text" id="nameInput" class="input-box" placeholder="FULL NAME (DR. ...)">
+        
         <div class="date-group">
             <input type="tel" id="dayInput" class="input-box date-input" placeholder="DD" maxlength="2">
             <input type="tel" id="monthInput" class="input-box date-input" placeholder="MM" maxlength="2">
             <input type="tel" id="yearInput" class="input-box date-input" placeholder="YYYY" maxlength="4">
         </div>
+
         <button onclick="checkIdentity()">VERIFY IDENTITY</button>
         <p id="loginError" class="error-msg">IDENTITY MISMATCH. ACCESS DENIED.</p>
     </div>
 
-    <div id="puzzlePhase" class="phase-container">
-        <h2 style="color:#ff3333; margin:0;">SYSTEM CORRUPTED</h2>
-        <p style="font-size:12px; color:#ff3333; border:1px solid #ff3333; padding:5px; margin:10px 0;">FATAL ERROR: DATA ENCRYPTED.<br>REASSEMBLE THE CODE.</p>
+    <div id="puzzlePhase">
+        <h2 style="color:#ff3333; margin-bottom: 5px;">SYSTEM CORRUPTED</h2>
+        <div class="puzzle-instruction">
+            FATAL ERROR: DATA ENCRYPTED.<br>
+            REASSEMBLE THE CODE SEQUENCE.
+        </div>
+
         <p>ENCRYPTED SIGNAL:</p>
         <div class="glitch-text">DSOSUS</div> 
+
+        <p style="font-size:12px; margin-top:20px;">ENTER DECRYPTED CODE:</p>
         <input type="text" id="puzzleInput" class="input-box" placeholder="______" maxlength="6" style="border-color:#ff3333; color:#ff3333;">
+        
         <button onclick="checkPuzzle()" style="background:#ff3333; color:#000;">UNLOCK DATA</button>
         <p id="puzzleError" class="error-msg">INCORRECT SEQUENCE.</p>
     </div>
 
-    <div id="rewardPhase" class="phase-container">
-        <h2 style="text-decoration:underline; font-family:serif;">PROJECT CHIMERA</h2>
-        <div style="border: 2px dashed #000; padding: 10px; margin: 15px 0; font-family:serif;">
-            <h3>VACCINE FORMULA</h3>
-            <p style="font-size:20px; font-weight:bold;">C₁₀H₁₅N + 3(Ag)</p>
+    <div id="rewardPhase">
+        <h2 style="text-align:center; text-decoration:underline; font-family:serif;">PROJECT CHIMERA: FINAL</h2>
+        <p><strong>CLASSIFICATION:</strong> TOP SECRET</p>
+        <p><strong>STATUS:</strong> RECOVERED</p>
+        
+        <div style="border: 2px dashed #000; padding: 15px; margin: 20px 0; font-family:serif; text-align:center;">
+            <h3>VACCINE FORMULA C-19</h3>
+            <p>Molecule Structure:</p>
+            <p style="font-size:24px; font-weight:bold;">C₁₀H₁₅N + 3(Ag)</p>
+            <p>Synthesis Time: 48 Hours</p>
             <hr>
-            <p style="font-size:10px;">INSTRUCTION: Combine with Stabilizer-X immediately.</p>
+            <p style="font-size:12px;">INSTRUCTION: Combine with Stabilizer-X immediately.</p>
         </div>
-        <p style="font-style:italic; font-size:12px;">"Pengorbanan ini tidak sia-sia."</p>
-        <button onclick="reportToHQ()" style="background:#000; color:#fff;">
+
+        <p style="text-align:center; font-style:italic;">"Pengorbanan ini tidak sia-sia."</p>
+        <p style="text-align:center; font-weight:bold;">- Dr. Elias Thorne</p>
+        
+        <button onclick="reportToHQ()" style="background:#000; color:#fff; margin-top:20px;">
             <i class="fab fa-whatsapp"></i> SECURE FILE & CLOSE
         </button>
     </div>
 
     <script>
+        // --- LOGIC PHASE 1: IDENTITAS ---
         function checkIdentity() {
             const name = document.getElementById('nameInput').value.toUpperCase().trim();
-            const d = parseInt(document.getElementById('dayInput').value);
-            const m = parseInt(document.getElementById('monthInput').value);
-            const y = parseInt(document.getElementById('yearInput').value);
+            const d = document.getElementById('dayInput').value;
+            const m = document.getElementById('monthInput').value;
+            const y = document.getElementById('yearInput').value;
 
-            // NAMA: DR. ELIAS THORNE (Check kata ELIAS atau THORNE)
-            // TGL: 19 04 1975
-            if ((name.includes("ELIAS") || name.includes("THORNE")) && d === 19 && m === 4 && y === 1975) {
+            // NAMA HARUS MENGANDUNG "ELIAS" ATAU "THORNE"
+            const nameCheck = (name.includes("ELIAS") || name.includes("THORNE"));
+            // TANGGAL: 19 04 1975
+            const dateCheck = (parseInt(d) === 19 && parseInt(m) === 4 && parseInt(y) === 1975);
+
+            if (nameCheck && dateCheck) {
+                // PINDAH KE FASE 2
                 document.getElementById('loginPhase').style.display = 'none';
                 document.getElementById('puzzlePhase').style.display = 'block';
             } else {
-                document.getElementById('loginError').style.display = 'block';
+                const err = document.getElementById('loginError');
+                err.style.display = 'block';
+                shakeElement('loginPhase');
             }
         }
 
+        // --- LOGIC PHASE 2: ANAGRAM PUZZLE ---
         function checkPuzzle() {
-            const ans = document.getElementById('puzzleInput').value.toUpperCase().trim();
-            // JAWABAN PUZZLE: SUSODS
-            if (ans === "SUSODS") {
+            const answer = document.getElementById('puzzleInput').value.toUpperCase().trim();
+            
+            // KUNCI JAWABAN: SUSODS
+            if (answer === "SUSODS") {
+                // PINDAH KE FASE 3 (ENDING)
                 document.getElementById('puzzlePhase').style.display = 'none';
                 document.getElementById('rewardPhase').style.display = 'block';
-                document.body.style.backgroundColor = "#ddd"; 
+                // Ganti background jadi putih bersih biar enak dibaca
+                document.body.style.backgroundColor = "#e0e0e0"; 
+                document.body.style.color = "#000";
             } else {
-                document.getElementById('puzzleError').style.display = 'block';
-                document.getElementById('puzzleInput').value = "";
+                const err = document.getElementById('puzzleError');
+                err.style.display = 'block';
+                shakeElement('puzzlePhase');
+                document.getElementById('puzzleInput').value = ""; // Kosongkan input
             }
         }
 
+        // --- LOGIC PHASE 3: REPORT KE WA ---
         function reportToHQ() {
-            // KIRIM KE WA KAMU
-            window.location.href = "https://wa.me/6285890554900?text=Saya%20sudah%20berhasil%20menemukan%20formula%20rahasia%20nya";
+            const phoneNumber = "6285890554900"; // Nomor WA Tujuan
+            const message = "Saya sudah berhasil menemukan formula rahasia nya"; // Pesan Otomatis
+            
+            // Format Link WA
+            const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+            
+            // Buka Link di Tab Baru
+            window.location.href = url;
         }
 
-        // ANTI-CHEAT SCRIPT
-        document.addEventListener('contextmenu', event => event.preventDefault());
-        document.onkeydown = function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 67 || e.keyCode == 74)) || (e.ctrlKey && e.keyCode == 85)) return false; }
+        // Efek Getar kalau salah
+        function shakeElement(id) {
+            const el = document.getElementById(id);
+            el.style.transform = "translateX(10px)";
+            setTimeout(() => el.style.transform = "translateX(-10px)", 100);
+            setTimeout(() => el.style.transform = "translateX(5px)", 200);
+            setTimeout(() => el.style.transform = "translateX(0)", 300);
+        }
+
+        // Enter key support
+        document.getElementById("nameInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") checkIdentity();
+        });
+        document.getElementById("puzzleInput").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") checkPuzzle();
+        });
+
     </script>
 </body>
 </html>
